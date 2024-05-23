@@ -13,6 +13,9 @@ public class GuiEncryption extends javax.swing.JFrame {
 
     private String CheckMethodEncryption = null;
     private Ceasar EncrytionByCeasar = new Ceasar();
+    private String Input = null;
+    private String KeyInput = null;
+    private String ResultText = "";
     /**
      * Creates new form GuiEncryption
      */
@@ -46,16 +49,19 @@ public class GuiEncryption extends javax.swing.JFrame {
         ButtonEncrypt = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
 
+        DialogCheckPlainText.getContentPane().setLayout(null);
+
         jLabel7.setFont(new java.awt.Font("Tempus Sans ITC", 3, 36)); // NOI18N
         jLabel7.setText("Please Enter Value ");
-        DialogCheckPlainText.getContentPane().add(jLabel7, java.awt.BorderLayout.CENTER);
+        DialogCheckPlainText.getContentPane().add(jLabel7);
+        jLabel7.setBounds(0, 0, 0, 0);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
         ButtonDecrypt.setText("Decrypt");
         getContentPane().add(ButtonDecrypt);
-        ButtonDecrypt.setBounds(430, 770, 90, 40);
+        ButtonDecrypt.setBounds(590, 630, 90, 40);
 
         ButtonOpenFile.setText("OpenFile");
         ButtonOpenFile.addActionListener(new java.awt.event.ActionListener() {
@@ -64,68 +70,70 @@ public class GuiEncryption extends javax.swing.JFrame {
             }
         });
         getContentPane().add(ButtonOpenFile);
-        ButtonOpenFile.setBounds(830, 770, 90, 40);
+        ButtonOpenFile.setBounds(990, 630, 90, 40);
 
-        TextInput.setText("Enter Value Encryption");
         TextInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TextInputActionPerformed(evt);
             }
         });
         getContentPane().add(TextInput);
-        TextInput.setBounds(430, 480, 490, 70);
+        TextInput.setBounds(590, 340, 490, 70);
 
-        TextKey.setText("Enter Key");
+        TextKey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextKeyActionPerformed(evt);
+            }
+        });
         getContentPane().add(TextKey);
-        TextKey.setBounds(430, 620, 490, 20);
+        TextKey.setBounds(590, 480, 490, 22);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Plain Text:");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(130, 500, 250, 50);
+        jLabel1.setBounds(290, 360, 250, 50);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Key :");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(130, 600, 250, 50);
+        jLabel2.setBounds(290, 460, 250, 50);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Cipher Text :");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(130, 700, 250, 50);
+        jLabel3.setBounds(290, 560, 250, 50);
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 2, 36)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Program Encryption / Decription (CEASAR And VIGENERE)");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(140, 240, 1030, 60);
+        jLabel4.setBounds(300, 100, 1030, 60);
 
-        ComboBoxMethodEncryption.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CEASAR", "VIGENERE" }));
+        ComboBoxMethodEncryption.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Chose Option Encryption", "CEASAR", "VIGENERE" }));
         ComboBoxMethodEncryption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboBoxMethodEncryptionActionPerformed(evt);
             }
         });
         getContentPane().add(ComboBoxMethodEncryption);
-        ComboBoxMethodEncryption.setBounds(430, 410, 490, 30);
+        ComboBoxMethodEncryption.setBounds(590, 270, 490, 30);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Method encryption :");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(130, 400, 250, 50);
+        jLabel6.setBounds(290, 260, 250, 50);
 
-        TextOutput.setText("Result ...");
         TextOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TextOutputActionPerformed(evt);
             }
         });
         getContentPane().add(TextOutput);
-        TextOutput.setBounds(430, 680, 490, 70);
+        TextOutput.setBounds(590, 540, 490, 70);
 
         ButtonWriteFile.setText("WriteFile");
         ButtonWriteFile.addActionListener(new java.awt.event.ActionListener() {
@@ -134,7 +142,7 @@ public class GuiEncryption extends javax.swing.JFrame {
             }
         });
         getContentPane().add(ButtonWriteFile);
-        ButtonWriteFile.setBounds(830, 565, 90, 40);
+        ButtonWriteFile.setBounds(990, 420, 90, 40);
 
         ButtonEncrypt.setText("Encription");
         ButtonEncrypt.addActionListener(new java.awt.event.ActionListener() {
@@ -143,11 +151,11 @@ public class GuiEncryption extends javax.swing.JFrame {
             }
         });
         getContentPane().add(ButtonEncrypt);
-        ButtonEncrypt.setBounds(430, 565, 90, 40);
+        ButtonEncrypt.setBounds(590, 420, 90, 40);
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/y.png"))); // NOI18N
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(90, 180, 1000, 710);
+        jLabel5.setBounds(220, -140, 1430, 950);
 
         pack();
         setLocationRelativeTo(null);
@@ -166,8 +174,13 @@ public class GuiEncryption extends javax.swing.JFrame {
             if(TextInput.getText().isEmpty()){
                 System.out.print("Success CEASAR" + DialogCheckPlainText.getName());
                 DialogCheckPlainText.setVisible(true);
+//            DialogCheckPlainText.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
             }else{
+                Input = TextInput.getText();
+                KeyInput = TextKey.getText();
                 System.out.print("Success CEASAR");
+                ResultText = EncrytionByCeasar.EncryotionCeasar(Input, Integer.parseInt(KeyInput));
+                TextOutput.setText(ResultText);
             }
         }else if(CheckMethodEncryption == "VIGENERE"){
         }else{
@@ -192,8 +205,15 @@ public class GuiEncryption extends javax.swing.JFrame {
     }//GEN-LAST:event_ComboBoxMethodEncryptionActionPerformed
 
     private void TextInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextInputActionPerformed
+
             // TODO add your handling code here:
+            System.err.println("Log input"+Input);
     }//GEN-LAST:event_TextInputActionPerformed
+
+    private void TextKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextKeyActionPerformed
+        // TODO add your handling code here:
+            System.err.println("Log input"+KeyInput);
+    }//GEN-LAST:event_TextKeyActionPerformed
 
     /**
      * @param args the command line arguments
@@ -225,7 +245,9 @@ public class GuiEncryption extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GuiEncryption().setVisible(true);
+            GuiEncryption gui = new GuiEncryption();
+            gui.setVisible(true);
+            gui.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Maximize the window
             }
         });
     }

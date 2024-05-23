@@ -16,7 +16,7 @@ public class Ceasar {
         return (char) ((((Character.toUpperCase(value) - 'A') + index) %26 +26)%26+'A');
     }
     public String EncryotionCeasar(String input, int index){
-        String result = null;
+        String result = "";
         int lenghtInput = input.length();
         
         for(int i = 0 ; i < lenghtInput ; i++){
