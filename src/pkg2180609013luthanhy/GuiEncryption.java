@@ -13,6 +13,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.Buffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
@@ -24,6 +28,7 @@ public class GuiEncryption extends javax.swing.JFrame {
 
     private String CheckMethodEncryption = null;
     private Ceasar EncrytionByCeasar = new Ceasar("100");
+    private DES EncryptionbyDES = new DES();
     private String Input = null;
     private String PathFoder = "";
     private String PathOutputFile = "";
@@ -262,7 +267,35 @@ public class GuiEncryption extends javax.swing.JFrame {
                 }
                 }else if(CheckMethodEncryption == "VIGENERE"){
                 }else if(CheckMethodEncryption == "DESC"){
-                    
+                    if(TextInput.getText().isEmpty()){
+                    DialogCheckPlainText.setVisible(true);
+                    MessageError.setText("Please Enter Input Value");
+                }else{
+                    Input = TextInput.getText();
+                    KeyInput = TextKey.getText();
+                    DialogCheckPlainText.setVisible(true);
+                    MessageError.setText("Encryption Success");
+                    String keyString = "1000" + KeyInput; 
+                    byte[] keyBytes = Arrays.copyOf(keyString.getBytes(StandardCharsets.UTF_8), 8);
+                    byte[] InputBytes = Input.getBytes();
+                    byte[] encryptedBytes = null;
+                        try {
+                            encryptedBytes = DES.encrypt(InputBytes, keyBytes);
+                        } catch (Exception ex) {
+                            Logger.getLogger(GuiEncryption.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    int i = 0;
+                    for(String textEncryption : GetDataImport){
+                        if(textEncryption != null){
+                            
+                           GetDataImport[i] = EncrytionByCeasar.EncryotionCeasar(textEncryption, Integer.parseInt(KeyInput));
+                        }
+                        i++;
+                    }
+                        String textresult = Base64.getEncoder().encodeToString(encryptedBytes);
+                    TextOutput.setText(textresult);
+                    TextInput.setText("");
+                }
                 }
                 else{
                     DialogCheckPlainText.setVisible(true);
