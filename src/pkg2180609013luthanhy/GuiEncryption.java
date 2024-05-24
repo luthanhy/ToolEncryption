@@ -5,6 +5,17 @@
  */
 package pkg2180609013luthanhy;
 
+import java.awt.Desktop;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.Buffer;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+
 /**
  *
  * @author Administrator
@@ -12,8 +23,11 @@ package pkg2180609013luthanhy;
 public class GuiEncryption extends javax.swing.JFrame {
 
     private String CheckMethodEncryption = null;
-    private Ceasar EncrytionByCeasar = new Ceasar();
+    private Ceasar EncrytionByCeasar = new Ceasar("100");
     private String Input = null;
+    private String PathFoder = "";
+    private String PathOutputFile = "";
+    private String[] GetDataImport = new String[100];
     private String KeyInput = null;
     private String ResultText = "";
     /**
@@ -33,7 +47,7 @@ public class GuiEncryption extends javax.swing.JFrame {
     private void initComponents() {
 
         DialogCheckPlainText = new javax.swing.JDialog();
-        jLabel7 = new javax.swing.JLabel();
+        MessageError = new javax.swing.JLabel();
         ButtonDecrypt = new javax.swing.JButton();
         ButtonOpenFile = new javax.swing.JButton();
         TextInput = new javax.swing.JTextField();
@@ -47,19 +61,27 @@ public class GuiEncryption extends javax.swing.JFrame {
         TextOutput = new javax.swing.JTextField();
         ButtonWriteFile = new javax.swing.JButton();
         ButtonEncrypt = new javax.swing.JButton();
+        ShowFile = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
 
+        DialogCheckPlainText.setMinimumSize(null);
+        DialogCheckPlainText.setSize(new java.awt.Dimension(500, 500));
         DialogCheckPlainText.getContentPane().setLayout(null);
 
-        jLabel7.setFont(new java.awt.Font("Tempus Sans ITC", 3, 36)); // NOI18N
-        jLabel7.setText("Please Enter Value ");
-        DialogCheckPlainText.getContentPane().add(jLabel7);
-        jLabel7.setBounds(0, 0, 0, 0);
+        MessageError.setFont(new java.awt.Font("Tempus Sans ITC", 3, 36)); // NOI18N
+        MessageError.setText("Please Enter Value ");
+        DialogCheckPlainText.getContentPane().add(MessageError);
+        MessageError.setBounds(0, 0, 400, 300);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
         ButtonDecrypt.setText("Decrypt");
+        ButtonDecrypt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonDecryptActionPerformed(evt);
+            }
+        });
         getContentPane().add(ButtonDecrypt);
         ButtonDecrypt.setBounds(590, 630, 90, 40);
 
@@ -86,7 +108,7 @@ public class GuiEncryption extends javax.swing.JFrame {
             }
         });
         getContentPane().add(TextKey);
-        TextKey.setBounds(590, 480, 490, 22);
+        TextKey.setBounds(590, 480, 490, 30);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -112,7 +134,7 @@ public class GuiEncryption extends javax.swing.JFrame {
         getContentPane().add(jLabel4);
         jLabel4.setBounds(300, 100, 1030, 60);
 
-        ComboBoxMethodEncryption.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Chose Option Encryption", "CEASAR", "VIGENERE" }));
+        ComboBoxMethodEncryption.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Chose Option Encryption", "CEASAR", "DESC", "VIGENERE", " " }));
         ComboBoxMethodEncryption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboBoxMethodEncryptionActionPerformed(evt);
@@ -142,7 +164,7 @@ public class GuiEncryption extends javax.swing.JFrame {
             }
         });
         getContentPane().add(ButtonWriteFile);
-        ButtonWriteFile.setBounds(990, 420, 90, 40);
+        ButtonWriteFile.setBounds(780, 420, 90, 40);
 
         ButtonEncrypt.setText("Encription");
         ButtonEncrypt.addActionListener(new java.awt.event.ActionListener() {
@@ -153,6 +175,15 @@ public class GuiEncryption extends javax.swing.JFrame {
         getContentPane().add(ButtonEncrypt);
         ButtonEncrypt.setBounds(590, 420, 90, 40);
 
+        ShowFile.setText("ShowFile");
+        ShowFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ShowFileActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ShowFile);
+        ShowFile.setBounds(990, 420, 90, 40);
+
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/y.png"))); // NOI18N
         getContentPane().add(jLabel5);
         jLabel5.setBounds(220, -140, 1430, 950);
@@ -162,29 +193,82 @@ public class GuiEncryption extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ButtonOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonOpenFileActionPerformed
-        // TODO add your handling code here:
+                File file = new File(PathFoder);
+            try {
+                Desktop.getDesktop().open(file);
+            } catch (IOException ex) {
+                DialogCheckPlainText.setVisible(true);
+                MessageError.setText("Path in not valid");
+            }
     }//GEN-LAST:event_ButtonOpenFileActionPerformed
 
     private void ButtonWriteFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonWriteFileActionPerformed
         // TODO add your handling code here:
+         if(PathOutputFile.isEmpty()){
+                DialogCheckPlainText.setVisible(true);
+                MessageError.setText("Path in not null");
+         }else{
+             try {
+                BufferedWriter bw = null;
+                String FileName = "ouput.txt";
+                 PathFoder = PathOutputFile + FileName;
+                 System.out.println(PathFoder);
+                 String resultEncryption = TextOutput.getText();
+                 System.out.println(resultEncryption);
+                 bw = new BufferedWriter(new FileWriter(PathFoder));
+                DialogCheckPlainText.setVisible(true);
+                MessageError.setText("Write File Sucess");
+                for(String textResult : GetDataImport){
+                    if(textResult != null){
+                        bw.write(textResult);
+                        bw.newLine(); // Write a newline character after each element
+                    }
+                }
+                
+                 bw.close();
+             } catch (IOException ex) {
+                // Handle any exceptions that occur during file processing
+//                ex.printStackTrace();
+                DialogCheckPlainText.setVisible(true);
+                MessageError.setText(ex.toString());
+             }
+         }
     }//GEN-LAST:event_ButtonWriteFileActionPerformed
 
     private void ButtonEncryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonEncryptActionPerformed
-            if(CheckMethodEncryption == "CEASAR"){
-            if(TextInput.getText().isEmpty()){
-                System.out.print("Success CEASAR" + DialogCheckPlainText.getName());
+            if(TextKey.getText().isEmpty()){
                 DialogCheckPlainText.setVisible(true);
-//            DialogCheckPlainText.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+                MessageError.setText("Please Enter Key Value");
             }else{
-                Input = TextInput.getText();
-                KeyInput = TextKey.getText();
-                System.out.print("Success CEASAR");
-                ResultText = EncrytionByCeasar.EncryotionCeasar(Input, Integer.parseInt(KeyInput));
-                TextOutput.setText(ResultText);
+                if(CheckMethodEncryption == "CEASAR"){
+                if(TextInput.getText().isEmpty()){
+                    DialogCheckPlainText.setVisible(true);
+                    MessageError.setText("Please Enter Input Value");
+                }else{
+                    Input = TextInput.getText();
+                    KeyInput = TextKey.getText();
+                    DialogCheckPlainText.setVisible(true);
+                    MessageError.setText("Encryption Success");
+                    ResultText = EncrytionByCeasar.EncryotionCeasar(Input, Integer.parseInt(KeyInput));
+                    int i = 0;
+                    for(String textEncryption : GetDataImport){
+                        if(textEncryption != null){
+                           GetDataImport[i] = EncrytionByCeasar.EncryotionCeasar(textEncryption, Integer.parseInt(KeyInput));
+                        }
+                        i++;
+                    }
+                    TextOutput.setText(ResultText);
+                    TextInput.setText("");
+                }
+                }else if(CheckMethodEncryption == "VIGENERE"){
+                }else if(CheckMethodEncryption == "DESC"){
+                    
+                }
+                else{
+                    DialogCheckPlainText.setVisible(true);
+                    MessageError.setText("Please Chose Method Encryption");
+                }
             }
-        }else if(CheckMethodEncryption == "VIGENERE"){
-        }else{
-        }
 
     }//GEN-LAST:event_ButtonEncryptActionPerformed
 
@@ -214,6 +298,66 @@ public class GuiEncryption extends javax.swing.JFrame {
         // TODO add your handling code here:
             System.err.println("Log input"+KeyInput);
     }//GEN-LAST:event_TextKeyActionPerformed
+
+    private void ButtonDecryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonDecryptActionPerformed
+        // TODO add your handling code here:
+       if(TextOutput.getText().isEmpty()){
+            DialogCheckPlainText.setVisible(true);
+            MessageError.setText("Cipher is not Empty");
+       }else{
+           String resultDeEncryption =  EncrytionByCeasar.DecryptionCeasar(TextOutput.getText(),Integer.parseInt(KeyInput));
+            DialogCheckPlainText.setVisible(true);
+            MessageError.setText("Decryption Success");
+            TextInput.setText(resultDeEncryption.toLowerCase());
+            TextOutput.setText("");
+       }
+    }//GEN-LAST:event_ButtonDecryptActionPerformed
+
+    private void ShowFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowFileActionPerformed
+        // TODO add your handling code here:
+          JFileChooser fileChooser = new JFileChooser();
+          fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt"));
+
+          int resultchosefile = fileChooser.showOpenDialog(null);
+          if(resultchosefile  == JFileChooser.APPROVE_OPTION){
+               File selectedFile = fileChooser.getSelectedFile();
+                String filePath = selectedFile.getAbsolutePath();
+                if (filePath.endsWith(".txt")) {
+                    filePath = filePath.substring(0, filePath.length() - selectedFile.getName().length());
+                }
+                PathOutputFile = filePath;
+    try {
+                // Create a BufferedReader to read the chosen file
+                BufferedReader br = new BufferedReader(new FileReader(selectedFile));
+                DialogCheckPlainText.setVisible(true);
+                MessageError.setText("Import data Success");
+                // Read the file line by line
+                String line;
+                int i = 0;
+                StringBuilder allLines = new StringBuilder();
+                while ((line = br.readLine()) != null) {
+                    // Process each line as neede
+                    GetDataImport[i] = line;
+                    allLines.append(line).append("\n"); // Append each line to the StringBuilder
+                    i++;
+                }
+                System.out.println(allLines.toString());
+                TextInput.setText(allLines.toString());
+                // Close the BufferedReader
+                br.close();
+            } catch (IOException ex) {
+                // Handle any exceptions that occur during file processing
+                ex.printStackTrace();
+            }
+          }
+          
+//        try {
+//            BufferedReader br = null;
+//            br
+//        } catch (Exception ex) {
+//            
+//        }
+    }//GEN-LAST:event_ShowFileActionPerformed
 
     /**
      * @param args the command line arguments
@@ -259,6 +403,8 @@ public class GuiEncryption extends javax.swing.JFrame {
     private javax.swing.JButton ButtonWriteFile;
     private javax.swing.JComboBox ComboBoxMethodEncryption;
     private javax.swing.JDialog DialogCheckPlainText;
+    private javax.swing.JLabel MessageError;
+    private javax.swing.JButton ShowFile;
     private javax.swing.JTextField TextInput;
     private javax.swing.JTextField TextKey;
     private javax.swing.JTextField TextOutput;
@@ -268,6 +414,5 @@ public class GuiEncryption extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     // End of variables declaration//GEN-END:variables
 }
