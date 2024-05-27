@@ -29,6 +29,9 @@ public class GuiEncryption extends javax.swing.JFrame {
     private String CheckMethodEncryption = null;
     private Ceasar EncrytionByCeasar = new Ceasar("100");
     private DES EncryptionbyDES = new DES();
+    private VIGENERE EncryptionbyVIGENERE = new VIGENERE();
+    private RAILFENCE EncryptionbyRAILFENCE = new RAILFENCE();
+    private PLAYFAIL EncryptionbyPLAYFAIL = new PLAYFAIL();
     private String Input = null;
     private String PathFoder = "";
     private String PathOutputFile = "";
@@ -40,6 +43,7 @@ public class GuiEncryption extends javax.swing.JFrame {
      */
     public GuiEncryption() {
         initComponents();
+        
     }
     
     /**
@@ -139,7 +143,7 @@ public class GuiEncryption extends javax.swing.JFrame {
         getContentPane().add(jLabel4);
         jLabel4.setBounds(300, 100, 1030, 60);
 
-        ComboBoxMethodEncryption.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Chose Option Encryption", "CEASAR", "DESC", "VIGENERE", " " }));
+        ComboBoxMethodEncryption.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Chose Option Encryption", "CEASAR", "VIGENERE", "RAILFENCE", "PLAYFAIL", "DESC", " " }));
         ComboBoxMethodEncryption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboBoxMethodEncryptionActionPerformed(evt);
@@ -266,11 +270,38 @@ public class GuiEncryption extends javax.swing.JFrame {
                     TextInput.setText("");
                 }
                 }else if(CheckMethodEncryption == "VIGENERE"){
+                    if(TextInput.getText().isEmpty()){
+                        DialogCheckPlainText.setVisible(true);
+                        MessageError.setText("Please Enter Input Value");
+                    }else{
+                        Input = TextInput.getText();
+                        KeyInput = TextKey.getText();
+                        DialogCheckPlainText.setVisible(true);
+                        MessageError.setText("Encryption Success");
+                        String textresult = "";
+                        textresult = EncryptionbyVIGENERE.EncryptionVIGENERE(Input, KeyInput);
+                        TextOutput.setText(textresult);
+                        TextInput.setText("");
+                    }
+                }else if(CheckMethodEncryption == "RAILFENCE"){
+                        if(TextInput.getText().isEmpty()){
+                        DialogCheckPlainText.setVisible(true);
+                        MessageError.setText("Please Enter Input Value");
+                    }else{
+                        Input = TextInput.getText();
+                        KeyInput = TextKey.getText();
+                        DialogCheckPlainText.setVisible(true);
+                        MessageError.setText("Encryption Success");
+                        String textresult = "";
+                        textresult = EncryptionbyRAILFENCE.EncryptionRAILFENCE(Input, Integer.parseInt(KeyInput));
+                        TextOutput.setText(textresult);
+                        TextInput.setText("");
+                        }
                 }else if(CheckMethodEncryption == "DESC"){
                     if(TextInput.getText().isEmpty()){
                     DialogCheckPlainText.setVisible(true);
                     MessageError.setText("Please Enter Input Value");
-                }else{
+                    }else{
                     Input = TextInput.getText();
                     KeyInput = TextKey.getText();
                     DialogCheckPlainText.setVisible(true);
@@ -292,10 +323,26 @@ public class GuiEncryption extends javax.swing.JFrame {
                         }
                         i++;
                     }
+                  
                         String textresult = Base64.getEncoder().encodeToString(encryptedBytes);
                     TextOutput.setText(textresult);
                     TextInput.setText("");
-                }
+                    }
+                }else if(CheckMethodEncryption == "PLAYFAIL"){
+                    if(TextInput.getText().isEmpty()){
+                    DialogCheckPlainText.setVisible(true);
+                    MessageError.setText("Please Enter Input Value");
+                    }else{
+                        Input = TextInput.getText();
+                        
+                        DialogCheckPlainText.setVisible(true);
+                        MessageError.setText("Encryption Success");
+                        String textresult = "";
+                        System.err.println("luthanhy"+EncryptionbyPLAYFAIL.EncryptionPLAYFAIL(Input));
+                        textresult = EncryptionbyPLAYFAIL.EncryptionPLAYFAIL(Input);
+                        TextOutput.setText(textresult);
+                        TextInput.setText("");
+                    }
                 }
                 else{
                     DialogCheckPlainText.setVisible(true);
@@ -313,12 +360,20 @@ public class GuiEncryption extends javax.swing.JFrame {
     
     private void ComboBoxMethodEncryptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxMethodEncryptionActionPerformed
         Object selectComboBoxMethod =  ComboBoxMethodEncryption.getSelectedItem();
+        
         if(selectComboBoxMethod != null){
             CheckMethodEncryption = selectComboBoxMethod.toString();
         }else{
-            // no code
+            
         }
         System.out.println("CheckMethodEncryption: " + CheckMethodEncryption);
+        if(CheckMethodEncryption == "PLAYFAIL"){
+            TextKey.setText("MONARCHY");
+            TextKey.setEditable(false);
+        }else{
+            TextKey.setText("");
+            TextKey.setEditable(true);
+        }
     }//GEN-LAST:event_ComboBoxMethodEncryptionActionPerformed
 
     private void TextInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextInputActionPerformed
@@ -333,17 +388,76 @@ public class GuiEncryption extends javax.swing.JFrame {
     }//GEN-LAST:event_TextKeyActionPerformed
 
     private void ButtonDecryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonDecryptActionPerformed
+        
         // TODO add your handling code here:
-       if(TextOutput.getText().isEmpty()){
+          if(CheckMethodEncryption == "CEASAR"){
+              if(TextOutput.getText().isEmpty()){
             DialogCheckPlainText.setVisible(true);
             MessageError.setText("Cipher is not Empty");
-       }else{
-           String resultDeEncryption =  EncrytionByCeasar.DecryptionCeasar(TextOutput.getText(),Integer.parseInt(KeyInput));
+            }else{
+            String resultDeEncryption =  EncrytionByCeasar.DecryptionCeasar(TextOutput.getText(),Integer.parseInt(KeyInput));
+             DialogCheckPlainText.setVisible(true);
+             MessageError.setText("Decryption Success");
+             TextInput.setText(resultDeEncryption.toLowerCase());
+             TextOutput.setText("");
+            }
+         }else if(CheckMethodEncryption == "VIGENERE"){
+             if(TextOutput.getText().isEmpty()){
             DialogCheckPlainText.setVisible(true);
-            MessageError.setText("Decryption Success");
-            TextInput.setText(resultDeEncryption.toLowerCase());
-            TextOutput.setText("");
-       }
+            MessageError.setText("Cipher is not Empty");
+            }else{
+            String resultDeEncryption =  EncryptionbyVIGENERE.DecryptionVIGENERE(TextOutput.getText(),KeyInput);
+             DialogCheckPlainText.setVisible(true);
+             MessageError.setText("Decryption Success");
+             TextInput.setText(resultDeEncryption.toLowerCase());
+             TextOutput.setText("");
+             }
+         }else if(CheckMethodEncryption == "RAILFENCE"){
+               if(TextOutput.getText().isEmpty()){
+            DialogCheckPlainText.setVisible(true);
+            MessageError.setText("Cipher is not Empty");
+            }else{
+            String resultDeEncryption =  EncryptionbyRAILFENCE.DecryptionRAILFENCE(TextOutput.getText(),Integer.parseInt(KeyInput));
+             DialogCheckPlainText.setVisible(true);
+             MessageError.setText("Decryption Success");
+                   System.err.println(""+resultDeEncryption);
+             TextInput.setText(resultDeEncryption);
+             TextOutput.setText("");
+             }
+         }else if(CheckMethodEncryption == "DESC")
+         {
+                    String newkeyString = "0" + TextKey.getText(); 
+                    byte[] newkeyBytes = Arrays.copyOf(newkeyString.getBytes(StandardCharsets.UTF_8), 8);
+                    System.err.println("y dep trai 2 "+TextOutput.getText());
+                    byte[] newOuput = Base64.getDecoder().decode(TextOutput.getText());
+//                    byte[] OUTPUT = TextOutput.getText().getBytes();
+                    System.err.println("y dep trai "+ newOuput);
+                    byte[] dencryptedBytes = null;
+                        try {
+                            dencryptedBytes = DES.decrypt(newOuput, newkeyBytes);
+                        } catch (Exception ex) {
+                            Logger.getLogger(GuiEncryption.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        String textresult = Base64.getEncoder().encodeToString(dencryptedBytes);
+                        TextInput.setText(textresult);
+         }else if(CheckMethodEncryption == "PLAYFAIL"){
+             if(TextOutput.getText().isEmpty()){
+            DialogCheckPlainText.setVisible(true);
+            MessageError.setText("Cipher is not Empty");
+            }else{
+            String resultDeEncryption =  EncryptionbyPLAYFAIL.DecryptionPLAYFAIL(TextOutput.getText());
+             DialogCheckPlainText.setVisible(true);
+             MessageError.setText("Decryption Success");
+                   System.err.println(""+resultDeEncryption);
+             TextInput.setText(resultDeEncryption);
+             TextOutput.setText("");
+            }
+         }
+         else{
+               DialogCheckPlainText.setVisible(true);
+               MessageError.setText("Please Chose Method Encryption");
+         }
+        
     }//GEN-LAST:event_ButtonDecryptActionPerformed
 
     private void ShowFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowFileActionPerformed

@@ -19,10 +19,18 @@ public class DES {
         cipher.init(Cipher.ENCRYPT_MODE, key);
         return cipher.doFinal(input);
     }
-       public static byte[] decrypt(byte[] encryptedData, byte[] keyBytes) throws Exception {
-        Key key = new SecretKeySpec(keyBytes, "DES");
-        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, key);
-        return cipher.doFinal(encryptedData);
+     public static byte[] decrypt(byte[] encryptedData, byte[] keyBytes) throws Exception {
+    if (encryptedData.length % 8 != 0) {
+        throw new IllegalArgumentException("Encrypted data length must be a multiple of 8 bytes");
     }
+    if (keyBytes.length != 8) {
+        throw new IllegalArgumentException("Key length must be 8 bytes (64 bits)");
+    }
+    
+    Key key = new SecretKeySpec(keyBytes, "DES");
+    Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+    cipher.init(Cipher.DECRYPT_MODE, key);
+    return cipher.doFinal(encryptedData);
+}
+
 }
